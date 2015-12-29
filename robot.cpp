@@ -60,13 +60,20 @@ Robot::Robot()
      */
     tcpServer = new QTcpServer(this);
     /*
+     * Inicjalizacja peryferiów
+     */
+    sonar = new Sonar("sonars");
+    sharp = new Sharp("analog sharps");
+    sonar->autoMeasure(500);
+    sharp->autoMeasure(500);
+    /*
      * misc, testowe
      */
-    sonar = new Sensor("sonary");
+    //sonar = new Sensor("sonary");
     motorLeft = new Actuator("motor left");
     timer=new QTimer(this);
     timer->setInterval(2000);
-    timer->start();
+    //timer->start();
     connect(timer,SIGNAL(timeout()),SLOT(timerHandler()));
 }
 

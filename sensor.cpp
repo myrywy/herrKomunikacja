@@ -7,6 +7,8 @@ Sensor::Sensor(QString _name)
     timer = new QTimer(this);
     connect(timer,SIGNAL(timeout()),SLOT(timeoutHandler()));
     timer->setInterval(3000);
+    autoTimer = new QTimer(this);
+    connect(timer,SIGNAL(timeout()),SLOT(repeatMeasurement()));
 }
 
 Sensor::~Sensor(){
@@ -14,9 +16,13 @@ Sensor::~Sensor(){
 }
 
 void Sensor::autoMeasure(int msRate){
-
+    timer->setInterval(msRate);
+    if(msRate>0){
+        timer->start();
+    }else{
+        timer->stop();
+    }
 }
-
 
 QList<double> Sensor::measure(){
     waitForValue=true;
@@ -46,6 +52,7 @@ void Sensor::setValues(QList<double> _values)
     if(callbackFunction){
         callbackFunction(this);
     }
+    updateDB();
     values=_values;
 }
 
@@ -53,4 +60,9 @@ void Sensor::timeoutHandler()
 {
     waitForValue=false;
     timer->stop();
+}
+
+void Sensor::repeatMeasurement()
+{
+    sendMessage(GET);
 }

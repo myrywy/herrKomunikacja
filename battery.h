@@ -6,7 +6,7 @@
 class Battery : public Sensor
 {
 public:
-    Battery();
+    Battery(QString _name);
     virtual void updateDB();
 };
 

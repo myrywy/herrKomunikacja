@@ -21,12 +21,14 @@ public:
     std::function<void(Sensor*)> callbackFunction;
     void setValues(QList<double> _values);
 
-private:
+protected:
     bool waitForValue;
     QList<double> values;
     QTimer* timer;
+    QTimer* autoTimer;
 
 private slots:
     void timeoutHandler();
+    void repeatMeasurement();
 };
 #endif // SENSOR_H

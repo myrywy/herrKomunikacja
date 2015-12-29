@@ -13,6 +13,9 @@
 #include "parser.h"
 #include "sensor.h"
 #include "actuator.h"
+#include "sonar.h"
+#include "sharp.h"
+#include "floor.h"
 
 class Robot : public QObject
 {
@@ -22,7 +25,10 @@ public:
     ~Robot();
     static QSqlDatabase* db;
 protected:
-    Sensor* sonar;
+    //Sensor* sonar;
+    Sonar* sonar;
+    Sharp* sharp;
+    Floor* floor;
     Actuator* motorLeft;
     QTimer* timer;
     QSerialPort* port;

@@ -24,7 +24,10 @@ SOURCES += main.cpp \
     sensor.cpp \
     actuator.cpp \
     command.cpp \
-    battery.cpp
+    battery.cpp \
+    sonar.cpp \
+    sharp.cpp \
+    floor.cpp
 
 HEADERS += \
     robot.h \
@@ -34,4 +37,7 @@ HEADERS += \
     sensor.h \
     actuator.h \
     command.h \
-    battery.h
+    battery.h \
+    sonar.h \
+    sharp.h \
+    floor.h
