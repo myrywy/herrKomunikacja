@@ -8,7 +8,7 @@ Sensor::Sensor(QString _name)
     connect(timer,SIGNAL(timeout()),SLOT(timeoutHandler()));
     timer->setInterval(3000);
     autoTimer = new QTimer(this);
-    connect(timer,SIGNAL(timeout()),SLOT(repeatMeasurement()));
+    connect(autoTimer,SIGNAL(timeout()),SLOT(repeatMeasurement()));
 }
 
 Sensor::~Sensor(){
@@ -16,11 +16,12 @@ Sensor::~Sensor(){
 }
 
 void Sensor::autoMeasure(int msRate){
-    timer->setInterval(msRate);
+    qDebug() << "auto " << msRate;
+    autoTimer->setInterval(msRate);
     if(msRate>0){
-        timer->start();
+        autoTimer->start();
     }else{
-        timer->stop();
+        autoTimer->stop();
     }
 }
 
@@ -64,5 +65,6 @@ void Sensor::timeoutHandler()
 
 void Sensor::repeatMeasurement()
 {
+    qDebug() << "repeeat";
     sendMessage(GET);
 }

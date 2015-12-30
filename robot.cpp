@@ -46,7 +46,7 @@ Robot::Robot()
         return;
     }
     //port=new QSerialPort(ports[0].portName());
-    port=new QSerialPort("COM1");
+    port=new QSerialPort("COM3");
     port->setBaudRate(QSerialPort::Baud9600);
     if(port->open(QIODevice::ReadWrite)){
         qDebug()<< "Port otwarty";
@@ -62,18 +62,20 @@ Robot::Robot()
     /*
      * Inicjalizacja peryferiów
      */
+    qDebug() << "Inicjalizacja sensorów...";
     sonar = new Sonar("sonars");
     sharp = new Sharp("analog sharps");
     sonar->autoMeasure(500);
     sharp->autoMeasure(500);
+    qDebug() << "Sensory OK.";
     /*
      * misc, testowe
      */
     //sonar = new Sensor("sonary");
     motorLeft = new Actuator("motor left");
     timer=new QTimer(this);
-    timer->setInterval(2000);
-    //timer->start();
+    timer->setInterval(5000);
+    timer->start();
     connect(timer,SIGNAL(timeout()),SLOT(timerHandler()));
 }
 
@@ -99,10 +101,11 @@ void Robot::timerHandler()
             qDebug() << "Motor left: ";
             qDebug() << Parser::doubleListToString(sonar->measure());
     }*/
-    if(motorLeft){
+    /*if(motorLeft){
                 qDebug() << "Motor left: ";
                 qDebug() << Parser::doubleListToString(motorLeft->measure());
-    }
+    }*/
+    qDebug() << "still alive";
 }
 
 void Robot::newConnectionHandler()
