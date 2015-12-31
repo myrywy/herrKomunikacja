@@ -8,7 +8,7 @@ Sensor::Sensor(QString _name)
     connect(timer,SIGNAL(timeout()),SLOT(timeoutHandler()));
     timer->setInterval(3000);
     autoTimer = new QTimer(this);
-    connect(timer,SIGNAL(timeout()),SLOT(repeatMeasurement()));
+    connect(autoTimer,SIGNAL(timeout()),SLOT(repeatMeasurement()));
 }
 
 Sensor::~Sensor(){
