@@ -19,8 +19,8 @@ Parser::Parser(QSerialPort *_port)
 
 void Parser::parse(QString message)
 {
-    qDebug() << "parse";
-    qDebug() << message;
+    //qDebug() << "parse";
+    //qDebug() << message;
     QList<QString> words=message.split("-");
     if(words.size()<2){
         return;//exception?
@@ -116,8 +116,8 @@ void Parser::dataAvilable()
 {
     if(port->bytesAvailable()){
         buffer.append(port->readAll());
-        qDebug() << "bytes avilable";
-        qDebug() << buffer;
+        //qDebug() << "bytes avilable";
+        //qDebug() << buffer;
         process();
     }
     /*qDebug() << "data avilable";
@@ -141,6 +141,7 @@ void Parser::process()
             if(state==IN_PROGRESS){
                 QByteArray msg=buffer.left(pointer);
                 state=WAITING;
+                emit commandReceived();
                 parse(QString(msg));
             }
             buffer=buffer.mid(pointer+1);

@@ -1,7 +1,8 @@
 #include "robot.h"
 
 Robot::Robot()
-    :port(0)
+    :port(0),
+      position(8)
 {
     /*
      *
@@ -46,12 +47,13 @@ Robot::Robot()
         return;
     }
     //port=new QSerialPort(ports[0].portName());
-    port=new QSerialPort("COM3");
+    port=new ComPort("COM3");
     port->setBaudRate(QSerialPort::Baud9600);
     if(port->open(QIODevice::ReadWrite)){
         qDebug()<< "Port otwarty";
         new Parser(port);
         Parser::parser->setParent(this);
+        connect(theParser,SIGNAL(commandReceived()),port,SLOT(goOn()));
     }else{
         qDebug()<< "Nie udało się otworzyć portu";
     }
@@ -65,6 +67,10 @@ Robot::Robot()
     qDebug() << "Inicjalizacja sensorów...";
     sonar = new Sonar("sonars");
     sharp = new Sharp("analog sharps");
+    sonar->setCallback([&this->position](Sensor* s){
+        qDebug() << position.size();
+        updatePosition(s);
+    });
     sonar->autoMeasure(500);
     sharp->autoMeasure(500);
     qDebug() << "Sensory OK.";
@@ -72,7 +78,9 @@ Robot::Robot()
      * misc, testowe
      */
     //sonar = new Sensor("sonary");
+    //position = QVector<double>(8);
     motorLeft = new Actuator("motor left");
+    motorRight = new Actuator("motor right");
     timer=new QTimer(this);
     timer->setInterval(5000);
     timer->start();
@@ -84,6 +92,27 @@ Robot::~Robot()
     qDebug() << "fin.";
     if(port){
         port->close();
+    }
+}
+
+void Robot::updatePosition(Sensor *s)
+{
+    if(s->getName()=="sonars"){
+        QList<double> v=s->getValues();
+        position[FRONT]=v[0];
+        position[FRONT_LEFT]=v[1];
+        position[FRONT_RIGHT]=v[2];
+        position[REAR]=v[3];
+        position[REAR_RIGHT]=v[4];
+        position[REAR_LEFT]=v[5];
+        qDebug() << "F " << position[FRONT]
+                    << "FL " << position[FRONT_LEFT]
+                    << "FR " << position[FRONT_RIGHT]
+                    << "R " << position[REAR]
+                    << "RL " << position[REAR_LEFT]
+                    << "RR " << position[REAR_RIGHT];
+    }else if(s->getName()=="analog sharps"){
+        ;
     }
 }
 

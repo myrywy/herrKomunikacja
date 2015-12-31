@@ -43,18 +43,24 @@ QList<double> Sensor::read(){
 
 
 void Sensor::setCallback(std::function< void(Sensor *)> f){
-
+   callbackFunction=std::function< void(Sensor *)>(f);
 }
 
 void Sensor::setValues(QList<double> _values)
 {
     qDebug()<<"setValues";
     waitForValue=false;
+    //qDebug()<<callbackFunction;
     if(callbackFunction){
         callbackFunction(this);
     }
-    updateDB();
+    //updateDB();
     values=_values;
+}
+
+QList<double> Sensor::getValues() const
+{
+    return values;
 }
 
 void Sensor::timeoutHandler()

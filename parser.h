@@ -39,6 +39,8 @@ protected:
     int pointer;
     PState state;
     QList<Peryferium*> peryferia;
+signals:
+    void commandReceived();
 };
 
 #define theParser Parser::parser
