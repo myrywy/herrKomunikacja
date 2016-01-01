@@ -23,29 +23,32 @@ ComPort::ComPort(QString _portName)
 qint64 ComPort::writeData(const char * data, qint64 maxSize)
 {
     const QByteArray dataArray(data);
-    if(!waiting){
-        qDebug() << "nie czekaj";
-        wait();
-        QSerialPort::writeData(dataArray.data(),maxSize);
-        timer->start();
-    }else{
-        qDebug() << "czekaj " << queue.size();
+    if(waiting){
         queue.enqueue(dataArray);
+    }else{
+        QSerialPort::writeData(data,maxSize);
+        wait();
     }
     //qDebug() << "to write " << dataArray.size();
     return dataArray.size();
 }
 
-void ComPort::wait()
+void ComPort::wait(bool _wait)
 {
-    waiting=true;
+    waiting=_wait;
+    if(_wait==true){
+        timer->start();
+    }
 }
 
 void ComPort::goOn()
 {
     qDebug() << "go on";
-    waiting=false;
     if(queue.size()!=0){
-        write(queue.dequeue());
+        QByteArray arr=queue.dequeue();
+        QSerialPort::writeData(arr.data(), arr.size());
+        wait();
+    }else{
+        wait(false);
     }
 }

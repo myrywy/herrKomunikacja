@@ -17,7 +17,7 @@ public:
 protected:
     QQueue<QByteArray> queue;
     bool waiting;
-    void wait();
+    void wait(bool _wait=true);
     QTimer* timer;
 public slots:
     void goOn();

@@ -29,6 +29,12 @@ enum Direction{
     REAR_RIGHT
 };
 
+enum State{
+    COFANIE,
+    ZAWRACANIE,
+    NA_WPROST
+};
+
 class Robot : public QObject
 {
     Q_OBJECT
@@ -37,12 +43,15 @@ public:
     ~Robot();
     static QSqlDatabase* db;
     void updatePosition(Sensor* s);
+    void checkFloor(Sensor* s);
 protected:
     QVector<double> position;
+    State state;
     //Sensor* sonar;
     Sonar* sonar;
     Sharp* sharp;
-    Floor* floor;
+    Floor* rearFloor;
+    Floor* frontFloor;
     Actuator* motorLeft;
     Actuator* motorRight;
     QTimer* timer;

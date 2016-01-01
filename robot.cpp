@@ -67,14 +67,24 @@ Robot::Robot()
     qDebug() << "Inicjalizacja sensorów...";
     sonar = new Sonar("sonars");
     sharp = new Sharp("analog sharps");
+    frontFloor = new Floor("floor front");
+    rearFloor = new Floor("floor back");
     auto delegatUpdatePosition=[&](Sensor* s)mutable{
         qDebug() << position.size()  << "ddd";
         updatePosition(s);
     };
+    auto delegateCheckFloor=[&](Sensor* s)mutable{
+        qDebug() << position.size()  << "ddd";
+        checkFloor(s);
+    };
     sonar->setCallback(delegatUpdatePosition);
     sharp->setCallback(delegatUpdatePosition);
-    sonar->autoMeasure(500);
-    sharp->autoMeasure(500);
+    frontFloor->setCallback(delegateCheckFloor);
+    rearFloor->setCallback(delegateCheckFloor);
+    sonar->autoMeasure(1000);
+    sharp->autoMeasure(1000);
+    frontFloor->autoMeasure(1000);
+    rearFloor->autoMeasure(1000);
     qDebug() << "Sensory OK.";
     /*
      * misc, testowe
@@ -87,6 +97,7 @@ Robot::Robot()
     timer->setInterval(500);
     timer->start();
     connect(timer,SIGNAL(timeout()),SLOT(timerHandler()));
+    state=NA_WPROST;
 }
 
 Robot::~Robot()
@@ -128,6 +139,17 @@ void Robot::updatePosition(Sensor *s)
     }
 }
 
+void Robot::checkFloor(Sensor *s)
+{
+    if(!s->getValues()[0]==1){
+        qDebug()<<"Nie ma podłogi :(";
+        state=ZAWRACANIE;
+    }else{
+
+        qDebug()<<"Podłoga :) "<<s->getValues()[0];
+    }
+}
+
 void Robot::timerHandler()
 {
     /*if(Parser::parser){
@@ -148,7 +170,7 @@ void Robot::timerHandler()
     }*/
     //qDebug() << "still alive";
     //QProcess::execute("clear");
-    //system("cls");
+    system("cls");
     qDebug() << "F " << position[FRONT]
                         << "FL " << position[FRONT_LEFT]
                         << "< " << position[LEFT]
@@ -157,6 +179,7 @@ void Robot::timerHandler()
                         << "R " << position[REAR]
                         << "RL " << position[REAR_LEFT]
                         << "RR " << position[REAR_RIGHT];
+    qDebug()<<"stan: "<< state;
     qDebug()<<"rand"<<qrand();
 }
 
