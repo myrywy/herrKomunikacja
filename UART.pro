@@ -27,7 +27,8 @@ SOURCES += main.cpp \
     battery.cpp \
     sonar.cpp \
     sharp.cpp \
-    floor.cpp
+    floor.cpp \
+    comport.cpp
 
 HEADERS += \
     robot.h \
@@ -40,4 +41,5 @@ HEADERS += \
     battery.h \
     sonar.h \
     sharp.h \
-    floor.h
+    floor.h \
+    comport.h

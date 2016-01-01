@@ -21,6 +21,8 @@ public:
     std::function<void(Sensor*)> callbackFunction;
     void setValues(QList<double> _values);
 
+    QList<double> getValues() const;
+
 protected:
     bool waitForValue;
     QList<double> values;
