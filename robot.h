@@ -16,8 +16,10 @@
 #include "sonar.h"
 #include "sharp.h"
 #include "floor.h"
+#include "battery.h"
 #include "motor.h"
 #include "velocity.h"
+#include <QQueue>
 #include <QVector>
 
 enum Direction{
@@ -51,11 +53,13 @@ public:
     static QSqlDatabase* db;
     void updatePosition(Sensor* s);
     void checkFloor(Sensor* s);
+    void checkVoltage(Sensor* s);
     State getState() const;
 
 protected:
     void setState(const State &value);
     QVector<double> position;
+    QQueue<double> voltage;
     State state;
     Velocity velocity;
     //Sensor* sonar;
@@ -63,6 +67,7 @@ protected:
     Sharp* sharp;
     Floor* rearFloor;
     Floor* frontFloor;
+    Battery* battery;
     Motor* motorLeft;
     Motor* motorRight;
     QTimer* timer;

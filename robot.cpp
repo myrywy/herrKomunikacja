@@ -69,22 +69,26 @@ Robot::Robot()
     sharp = new Sharp("analog sharps");
     frontFloor = new Floor("floor front");
     rearFloor = new Floor("floor back");
+    battery = new Battery("battery");
     auto delegatUpdatePosition=[&](Sensor* s)mutable{
-        qDebug() << position.size()  << "ddd";
         updatePosition(s);
     };
     auto delegateCheckFloor=[&](Sensor* s)mutable{
-        qDebug() << position.size()  << "ddd";
         checkFloor(s);
+    };
+    auto delegateCheckVoltage=[&](Sensor* s)mutable{
+        checkVoltage(s);
     };
     sharp->setCallback(delegatUpdatePosition);
     sonar->setCallback(delegatUpdatePosition);
     frontFloor->setCallback(delegateCheckFloor);
     rearFloor->setCallback(delegateCheckFloor);
+    battery->setCallback(delegateCheckVoltage);
     sonar->autoMeasure(1000);
     sharp->autoMeasure(1000);
     frontFloor->autoMeasure(1000);
     rearFloor->autoMeasure(1000);
+    battery->autoMeasure(1000);
     qDebug() << "Sensory OK.";
     motorLeft = new Motor("motor left");
     motorRight = new Motor("motor right");
@@ -146,6 +150,38 @@ void Robot::checkFloor(Sensor *s)
     }else{
 
         qDebug()<<"Podłoga :) "<<s->getValues()[0];
+    }
+}
+
+void Robot::checkVoltage(Sensor *s)
+{
+    voltage.enqueue(s->getValues()[0]);
+    qDebug()<<"Napiecie "<<voltage;
+    int n=10;
+    if(voltage.size()> n){
+        voltage.dequeue();
+        double meanV=0;
+        for(int i=0;i<n;i++){
+            meanV+=voltage[i];
+        }
+        meanV/=n;
+        QList<double> validV;
+        for(int i=0;i<n;i++){
+            if(voltage[i]<meanV*1.5 && voltage[i]>meanV*0.5){
+                validV.append(voltage[i]);
+            }
+        }
+        meanV=0;
+        n=validV.size();
+        for(int i=0;i<n;i++){
+            meanV+=validV[i];
+        }
+        meanV/=n;
+        qDebug()<<"Napiecie "<<meanV;
+        if(meanV<6.3){
+            qDebug() << "Napięcie na niskie!";
+            system("shutdown -s");
+        }
     }
 }
 
