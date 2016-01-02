@@ -27,7 +27,7 @@ qint64 ComPort::writeData(const char * data, qint64 maxSize)
     if(waiting){
         queue.enqueue(dataArray);
     }else{
-        qDebug() << QTime::currentTime().toString();
+        //qDebug() << QTime::currentTime().toString();
         QSerialPort::writeData(data,maxSize);
         wait();
     }
@@ -45,7 +45,7 @@ void ComPort::wait(bool _wait)
 
 void ComPort::goOn()
 {
-    qDebug() << "go on";
+    //qDebug() << "go on";
     if(queue.size()!=0){
         QByteArray arr=queue.dequeue();
         QSerialPort::writeData(arr.data(), arr.size());

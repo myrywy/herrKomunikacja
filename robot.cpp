@@ -92,6 +92,14 @@ Robot::Robot()
     qDebug() << "Sensory OK.";
     motorLeft = new Motor("motor left");
     motorRight = new Motor("motor right");
+    //motorLeft->setKp(1000);
+    //motorLeft->setTi(0.5);
+    //motorLeft->setTd(120);
+    motorLeft->setDir(0);
+    //motorRight->setKp(1000);
+    //motorRight->setTi(0.5);
+    //motorRight->setTd(120);
+    motorRight->setDir(1);
     /*
      * misc, testowe
      */
@@ -101,7 +109,9 @@ Robot::Robot()
     timer->setInterval(500);
     timer->start();
     connect(timer,SIGNAL(timeout()),SLOT(timerHandler()));
-    state=NA_WPROST;
+
+    velocity=Velocity(0,0);
+    setState(ROZRUCH);
 }
 
 Robot::~Robot()
@@ -140,6 +150,7 @@ void Robot::updatePosition(Sensor *s)
             p=0;
         }
     }
+    checkState();
 }
 
 void Robot::checkFloor(Sensor *s)
@@ -192,7 +203,8 @@ State Robot::getState() const
 
 void Robot::setState(const State &value)
 {
-    if(state=value){
+    qDebug() << "Set state";
+    if(state==value){
         return;
     }
     state = value;
@@ -200,10 +212,10 @@ void Robot::setState(const State &value)
         velocity=Velocity(0.5,0);
     }
     if(value==W_LEWO){
-        velocity=Velocity(0.5,0.6);
+        velocity=Velocity(0.5,0.8);
     }
     if(value==W_PRAWO){
-        velocity=Velocity(0.5,-0.6);
+        velocity=Velocity(0.5,-0.8);
     }
     if(value==STOP){
         velocity=Velocity(0.0,0.0);
@@ -226,8 +238,11 @@ bool Robot::checkObstacle(Direction dir, double max, double min)
 
 void Robot::checkState()
 {
+    if(state==ROZRUCH){
+        setState(NA_WPROST);
+    }
     if(state==NA_WPROST){
-        if(position[FRONT]<15 && position[FRONT]>0
+        /*if(position[FRONT]<15 && position[FRONT]>0
                 && position[FRONT_LEFT]<20 && position[FRONT_LEFT]>0
                 && position[FRONT_RIGHT]<20 && position[FRONT_RIGHT]){
             if(position[FRONT_LEFT]<20 && position[FRONT_LEFT]>0
@@ -241,17 +256,38 @@ void Robot::checkState()
             }else{
                 setState(W_LEWO);
             }
-        }
-    }else if(state=W_LEWO){
-        if((!checkObstacle(FRONT)) && (!checkObstacle(RIGHT))){
+        }*/
+        if(checkObstacle(FRONT)){
+            if(checkObstacle(LEFT)){
+                if(checkObstacle(RIGHT)){
+                    setState(STOP);
+                }else{
+                    setState(W_PRAWO);
+                }
+            }else{
+                if(checkObstacle(RIGHT)){
+                    setState(W_LEWO);
+                }else{
+                    setState((qrand()%2==1)?W_LEWO:W_PRAWO);
+                }
+            }
+        }else{
             setState(NA_WPROST);
         }
-    }else if(state=W_PRAWO){
+    }else if(state==W_LEWO){
+        if((!checkObstacle(FRONT))){// && (!checkObstacle(RIGHT))){
+            setState(NA_WPROST);
+        }else if(checkObstacle(FRONT) && checkObstacle(LEFT) && checkObstacle(RIGHT)){
+            setState(STOP);
+        }
+    }else if(state==W_PRAWO){
         if((!checkObstacle(FRONT)) && (!checkObstacle(LEFT))){
             setState(NA_WPROST);
+        }else if(checkObstacle(EXT_FRONT) && checkObstacle(LEFT) && checkObstacle(RIGHT)){
+            setState(STOP);
         }
-    }else if(state=STOP){
-        ;//stój na wieki
+    }else if(state==STOP){
+        qDebug() << "stop";//stój na wieki
     }
 }
 
@@ -284,6 +320,21 @@ void Robot::timerHandler()
                         << "R " << position[REAR]
                         << "RL " << position[REAR_LEFT]
                         << "RR " << position[REAR_RIGHT];
+
+    QVector<bool> obstacles(10);
+    for(int i=0;i<obstacles.size();i++){
+        obstacles[i]=checkObstacle(Direction(i));
+    }
+    qDebug()<<"FRONT"<<obstacles[FRONT]
+              <<"FRONT_LEFT"<<obstacles[FRONT_LEFT]
+                <<"FRONT_RIGHT"<<obstacles[FRONT_RIGHT]
+                  <<"LEFT"<<obstacles[LEFT]
+                    <<"RIGHT"<<obstacles[RIGHT]
+                      <<"REAR"<<obstacles[REAR]
+                        <<"REAR_LEFT"<<obstacles[REAR_LEFT]
+                          <<"REAR_RIGHT"<<obstacles[REAR_RIGHT]
+                            <<"EXT_FRONT"<<obstacles[EXT_FRONT]
+                              <<"EXT_BACK"<<obstacles[EXT_BACK];
     qDebug()<<"stan: "<< state;
     qDebug()<<"rand"<<qrand();
 }

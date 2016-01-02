@@ -41,7 +41,8 @@ enum State{
     NA_WPROST,
     W_LEWO,
     W_PRAWO,
-    STOP
+    STOP,
+    ROZRUCH
 };
 
 class Robot : public QObject
