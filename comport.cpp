@@ -1,5 +1,6 @@
 #include "comport.h"
 #include <QDebug>
+#include <QTime>
 
 ComPort::ComPort()
 {
@@ -26,6 +27,7 @@ qint64 ComPort::writeData(const char * data, qint64 maxSize)
     if(waiting){
         queue.enqueue(dataArray);
     }else{
+        qDebug() << QTime::currentTime().toString();
         QSerialPort::writeData(data,maxSize);
         wait();
     }

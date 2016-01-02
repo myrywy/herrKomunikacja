@@ -21,7 +21,21 @@ void Parser::parse(QString message)
 {
     //qDebug() << "parse";
     //qDebug() << message;
-    QList<QString> words=message.split("-");
+    QList<QString> words;//=message.split("-");
+    int splitPoint=0;
+    for(int i=0;i<message.size();i++){
+        if(message[i]=='-'){
+            words.append(message.mid(splitPoint,i-splitPoint));
+            splitPoint=i+1;
+            if(words.size()==2){
+                break;
+            }
+        }
+    }
+    if(splitPoint<message.size()){
+        words.append(message.mid(splitPoint,message.size()-splitPoint));
+    }
+    //qDebug()<<words;
     if(words.size()<2){
         return;//exception?
     }
@@ -141,6 +155,7 @@ void Parser::process()
             if(state==IN_PROGRESS){
                 QByteArray msg=buffer.left(pointer);
                 state=WAITING;
+                qDebug() << msg;
                 emit commandReceived();
                 parse(QString(msg));
             }

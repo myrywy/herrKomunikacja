@@ -2,6 +2,7 @@
 #include <QThread>
 #include "mainthread.h"
 #include "robot.h"
+#include <iostream>
 
 int main(int argc, char *argv[])
 {
@@ -9,5 +10,12 @@ int main(int argc, char *argv[])
     //MainThread th;
     //th.start();
     Robot* robot = new Robot();
-    return a.exec();
+    robot->setParent(&a);
+    try{
+        return a.exec();
+    }catch(...){
+        std::cout<<"Nieznany błąd.";
+        std::cout.flush();
+        delete robot;
+    }
 }

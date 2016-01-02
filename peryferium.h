@@ -28,7 +28,7 @@ public:
     void setName(QString newVal);
     static QString typeToString(MessageType type);
 
-private:
+protected:
     QString name;
 };
 

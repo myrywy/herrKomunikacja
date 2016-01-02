@@ -29,7 +29,7 @@ protected:
     QTimer* timer;
     QTimer* autoTimer;
 
-private slots:
+protected slots:
     void timeoutHandler();
     void repeatMeasurement();
 };
