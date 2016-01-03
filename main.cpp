@@ -2,6 +2,7 @@
 #include <QThread>
 #include "mainthread.h"
 #include "robot.h"
+#include "debuginfo.h"
 #include <iostream>
 
 int main(int argc, char *argv[])
@@ -9,6 +10,7 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     //MainThread th;
     //th.start();
+    debugInfo();
     Robot* robot = new Robot();
     robot->setParent(&a);
     try{

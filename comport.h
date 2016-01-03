@@ -11,16 +11,18 @@ class ComPort : public QSerialPort
 {
     Q_OBJECT
 public:
-    ComPort();
+    //ComPort();
     ComPort(QString _portName);
     virtual qint64 writeData(const char * data, qint64 maxSize);
 protected:
+    int maxWaitTime;
     QQueue<QByteArray> queue;
     bool waiting;
     void wait(bool _wait=true);
     QTimer* timer;
 public slots:
     void goOn();
+    void waitingTimeout();
 };
 
 #endif // COMPORT_H

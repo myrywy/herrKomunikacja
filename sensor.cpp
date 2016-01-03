@@ -50,12 +50,12 @@ void Sensor::setValues(QList<double> _values)
 {
     //qDebug()<<"setValues";
     waitForValue=false;
+    values=_values;
     //qDebug()<<callbackFunction;
     if(callbackFunction){
         callbackFunction(this);
     }
     //updateDB();
-    values=_values;
 }
 
 QList<double> Sensor::getValues() const

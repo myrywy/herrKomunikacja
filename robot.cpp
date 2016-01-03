@@ -47,7 +47,7 @@ Robot::Robot()
         return;
     }
     //port=new QSerialPort(ports[0].portName());
-    port=new ComPort("COM4");
+    port=new ComPort("COM3");
     port->setBaudRate(QSerialPort::Baud9600);
     if(port->open(QIODevice::ReadWrite)){
         qDebug()<< "Port otwarty";
@@ -126,6 +126,9 @@ void Robot::updatePosition(Sensor *s)
 {
     if(s->getName()=="sonars"){
         QList<double> v=s->getValues();
+        if(v.size()<5){
+            return;
+        }
         position[REAR_LEFT]=v[0];
         position[REAR]=v[1];
         position[REAR_RIGHT]=v[2];
@@ -140,6 +143,9 @@ void Robot::updatePosition(Sensor *s)
                     << "RR " << position[REAR_RIGHT];*/
     }else if(s->getName()=="analog sharps"){
         QList<double> v=s->getValues();
+        if(v.size()<4){
+            return;
+        }
         position[RIGHT]=v[0];
         position[REAR]=v[1];
         position[FRONT]=v[2];
@@ -155,6 +161,9 @@ void Robot::updatePosition(Sensor *s)
 
 void Robot::checkFloor(Sensor *s)
 {
+    if(s->getValues().isEmpty()){
+        return;
+    }
     if(!s->getValues()[0]==1){
         qDebug()<<"Nie ma podłogi :(";
         //state=ZAWRACANIE;
@@ -166,6 +175,9 @@ void Robot::checkFloor(Sensor *s)
 
 void Robot::checkVoltage(Sensor *s)
 {
+    if(s->getValues().size()<1){
+        return;
+    }
     voltage.enqueue(s->getValues()[0]);
     qDebug()<<"Napiecie "<<voltage;
     int n=10;
@@ -311,7 +323,7 @@ void Robot::timerHandler()
     }*/
     //qDebug() << "still alive";
     //QProcess::execute("clear");
-    system("cls");
+    //system("cls");
     qDebug() << "F " << position[FRONT]
                         << "FL " << position[FRONT_LEFT]
                         << "LEWO " << position[LEFT]

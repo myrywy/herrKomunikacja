@@ -30,7 +30,8 @@ SOURCES += main.cpp \
     floor.cpp \
     comport.cpp \
     velocity.cpp \
-    motor.cpp
+    motor.cpp \
+    debuginfo.cpp
 
 HEADERS += \
     robot.h \
@@ -46,4 +47,5 @@ HEADERS += \
     floor.h \
     comport.h \
     velocity.h \
-    motor.h
+    motor.h \
+    debuginfo.h

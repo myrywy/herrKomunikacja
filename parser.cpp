@@ -1,7 +1,8 @@
 #include "parser.h"
-
+#include <QTime>
 #include "sensor.h"
 #include "actuator.h"
+#include "comport.h"
 
 Parser* Parser::parser=0;
 
@@ -35,7 +36,7 @@ void Parser::parse(QString message)
     if(splitPoint<message.size()){
         words.append(message.mid(splitPoint,message.size()-splitPoint));
     }
-    //qDebug()<<words;
+    qDebug()<<words;
     if(words.size()<2){
         return;//exception?
     }
@@ -109,6 +110,8 @@ QList<double> Parser::stringToDoubleList(QString str)
         r=words[i].toDouble(&ok);
         if(ok){
             result.append(r);
+        }else{
+            result.append(0);
         }
     }
     return result;
@@ -156,7 +159,10 @@ void Parser::process()
                 QByteArray msg=buffer.left(pointer);
                 state=WAITING;
                 qDebug() << msg;
-                emit commandReceived();
+                qInfo() << "->" << msg;
+                qInfo() << QTime::currentTime().toString("hh:mm:ss,zzz");
+                //emit commandReceived();
+                (static_cast<ComPort*>(port))->goOn();
                 parse(QString(msg));
             }
             buffer=buffer.mid(pointer+1);
