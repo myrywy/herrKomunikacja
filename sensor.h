@@ -6,6 +6,7 @@
 #include <QThread>
 #include <QCoreApplication>
 #include <QTimer>
+//class Peryferium;
 class Sensor : public Peryferium
 {
     Q_OBJECT
@@ -17,8 +18,6 @@ public:
     void autoMeasure(int msRate = 50);
     QList<double> measure();
     QList<double> read();
-    void setCallback(std::function<void(Sensor*)> f);
-    std::function<void(Sensor*)> callbackFunction;
     void setValues(QList<double> _values);
 
     QList<double> getValues() const;

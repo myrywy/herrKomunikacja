@@ -3,7 +3,8 @@
 
 #include <QObject>
 #include <QtSerialPort/QSerialPort>
-#include  "parser.h"
+#include <functional>
+//#include  "parser.h"
 #include "command.h"
 
 enum MessageType{
@@ -12,6 +13,8 @@ enum MessageType{
     MEASUREMENT,
     ACK
 };
+
+
 
 class Peryferium : public QObject
 {
@@ -27,9 +30,26 @@ public:
     void sendMessage(QList<double> values, MessageType type);
     void setName(QString newVal);
     static QString typeToString(MessageType type);
+    //void setCallback(std::function<void(Peryferium*)> f);
+    //std::function<void(Peryferium*)> callback();
+    std::function<void (Peryferium *)> getCallbackFunction() const;
+    void setCallbackFunction(const std::function<void (Peryferium *)> &value);
+    std::function<void(Peryferium*)> callbackFunction;
 
 protected:
-    QString name;
-};
 
+    QString name;
+    void setValues(QList<double> _values);
+
+};
+/*
+void Peryferium::setCallback(std::function<(Peryferium *)> f){
+    callbackFunction=std::function< void(Sensor *)>(f);
+}
+
+std::function<void (Peryferium *)> Peryferium::callback()
+{
+    return callbackFunction;
+}
+*/
 #endif // PERYFERIUM_H

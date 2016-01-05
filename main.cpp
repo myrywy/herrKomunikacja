@@ -1,6 +1,6 @@
 #include <QCoreApplication>
 #include <QThread>
-#include "mainthread.h"
+//#include "mainthread.h"
 #include "robot.h"
 #include "debuginfo.h"
 #include <iostream>

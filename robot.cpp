@@ -70,20 +70,34 @@ Robot::Robot()
     frontFloor = new Floor("floor front");
     rearFloor = new Floor("floor back");
     battery = new Battery("battery");
-    auto delegatUpdatePosition=[&](Sensor* s)mutable{
-        updatePosition(s);
+    system = new Peryferium("system");
+    auto delegatUpdatePosition=[&](Peryferium* p)mutable{
+        Sensor* s=dynamic_cast<Sensor*>(p);
+        if(s){
+            updatePosition(s);
+        }
     };
-    auto delegateCheckFloor=[&](Sensor* s)mutable{
-        checkFloor(s);
+    auto delegateCheckFloor=[&](Peryferium* p)mutable{
+        Sensor* s=dynamic_cast<Sensor*>(p);
+        if(s){
+            checkFloor(s);
+        }
     };
-    auto delegateCheckVoltage=[&](Sensor* s)mutable{
-        checkVoltage(s);
+    auto delegateCheckVoltage=[&](Peryferium* p)mutable{
+        Sensor* s=dynamic_cast<Sensor*>(p);
+        if(s){
+            checkVoltage(s);
+        }
     };
-    sharp->setCallback(delegatUpdatePosition);
-    sonar->setCallback(delegatUpdatePosition);
-    frontFloor->setCallback(delegateCheckFloor);
-    rearFloor->setCallback(delegateCheckFloor);
-    battery->setCallback(delegateCheckVoltage);
+    auto delegateSystemReset=[&](Peryferium* p)mutable{
+        systemReset();
+    };
+    system->setCallbackFunction(delegateSystemReset);
+    sharp->setCallbackFunction(delegatUpdatePosition);
+    sonar->setCallbackFunction(delegatUpdatePosition);
+    frontFloor->setCallbackFunction(delegateCheckFloor);
+    rearFloor->setCallbackFunction(delegateCheckFloor);
+    battery->setCallbackFunction(delegateCheckVoltage);
     sonar->autoMeasure(1000);
     sharp->autoMeasure(1000);
     frontFloor->autoMeasure(1000);
@@ -92,14 +106,7 @@ Robot::Robot()
     qDebug() << "Sensory OK.";
     motorLeft = new Motor("motor left");
     motorRight = new Motor("motor right");
-    //motorLeft->setKp(1000);
-    //motorLeft->setTi(0.5);
-    //motorLeft->setTd(120);
-    motorLeft->setDir(0);
-    //motorRight->setKp(1000);
-    //motorRight->setTi(0.5);
-    //motorRight->setTd(120);
-    motorRight->setDir(1);
+    setupMotors();
     /*
      * misc, testowe
      */
@@ -203,7 +210,7 @@ void Robot::checkVoltage(Sensor *s)
         qDebug()<<"Napiecie "<<meanV;
         if(meanV<6.3){
             qDebug() << "Napięcie na niskie!";
-            system("shutdown -s");
+            ::system("shutdown -s");
         }
     }
 }
@@ -216,24 +223,28 @@ State Robot::getState() const
 void Robot::setState(const State &value)
 {
     qDebug() << "Set state";
+    qWarning() << "STAN: " << state;
     if(state==value){
         return;
     }
     state = value;
+    qWarning() << "ZMIANA STANU " << state;
     if(value==NA_WPROST){
-        velocity=Velocity(0.5,0);
+        velocity=Velocity(0.7,0);
     }
     if(value==W_LEWO){
-        velocity=Velocity(0.5,0.8);
+        velocity=Velocity(0.7,0.5);
     }
     if(value==W_PRAWO){
-        velocity=Velocity(0.5,-0.8);
+        velocity=Velocity(0.7,-0.5);
     }
     if(value==STOP){
         velocity=Velocity(0.0,0.0);
     }
     motorLeft->setSP(velocity.getLeftSp());
     motorRight->setSP(velocity.getRightSp());
+    //motorLeft->setCV(velocity.getLeftSp());
+    //motorRight->setCV(velocity.getRightSp());
 }
 
 bool Robot::checkObstacle(Direction dir, double max, double min)
@@ -246,6 +257,19 @@ bool Robot::checkObstacle(Direction dir, double max, double min)
         return true;
     }
     return false;
+}
+
+void Robot::setupMotors()
+{
+    motorLeft->setKp(20);
+    //motorLeft->setTi(0.5);
+    //motorLeft->setTd(120);
+    motorLeft->setDir(1);
+    motorRight->setKp(20);
+    //motorRight->setTi(0.5);
+    //motorRight->setTd(120);
+    motorRight->setDir(1);
+    //motorLeft->setPid(0);
 }
 
 void Robot::checkState()
@@ -301,6 +325,13 @@ void Robot::checkState()
     }else if(state==STOP){
         qDebug() << "stop";//stój na wieki
     }
+}
+
+void Robot::systemReset()
+{
+    port->resetQueue();
+    setupMotors();
+    setState(ROZRUCH);
 }
 
 void Robot::timerHandler()

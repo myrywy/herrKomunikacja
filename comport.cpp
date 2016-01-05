@@ -41,6 +41,14 @@ qint64 ComPort::writeData(const char * data, qint64 maxSize)
     return dataArray.size();
 }
 
+void ComPort::resetQueue()
+{
+    timer->stop();
+    timer->setInterval(maxWaitTime);
+    queue.clear();
+    wait(false);
+}
+
 void ComPort::wait(bool _wait)
 {
     waiting=_wait;

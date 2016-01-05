@@ -17,7 +17,11 @@ public:
     double angular;
     double getLeftSp();
     double getRightSp();
+    double getLeftCv();
+    double getRightCv();
     static double maxSP;
+    static double maxCV;
+    static bool openSystem;
 };
 
 #endif // VELOCITY_H

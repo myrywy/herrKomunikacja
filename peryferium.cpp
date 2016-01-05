@@ -1,4 +1,5 @@
 #include "peryferium.h"
+#include "parser.h"
 #include <QDebug>
 
 Peryferium::Peryferium(QString _name)
@@ -67,4 +68,14 @@ QString Peryferium::typeToString(MessageType type)
     case ACK:
         return QString("ack");
     }
+}
+
+std::function<void (Peryferium *)> Peryferium::getCallbackFunction() const
+{
+    return callbackFunction;
+}
+
+void Peryferium::setCallbackFunction(const std::function<void (Peryferium *)> &value)
+{
+    callbackFunction = value;
 }

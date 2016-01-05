@@ -54,6 +54,12 @@ void Parser::parse(QString message)
             //s->callbackFunction(s);
         }
     }
+    Actuator* a=dynamic_cast<Actuator*>(p);
+    if(!s && !a){
+        if(p->getCallbackFunction()){
+            p->getCallbackFunction()(p);
+        }
+    }
 }
 
 QByteArray Parser::getBuffer()
@@ -133,8 +139,8 @@ void Parser::dataAvilable()
 {
     if(port->bytesAvailable()){
         buffer.append(port->readAll());
-        //qDebug() << "bytes avilable";
-        //qDebug() << buffer;
+        qDebug() << "bytes avilable";
+        qDebug() << buffer;
         process();
     }
     /*qDebug() << "data avilable";

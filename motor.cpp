@@ -21,6 +21,36 @@ void Motor::setSP(double rpm)
     sendMessage(msgValues,SET);
 }
 
+void Motor::setCV(double cv)
+{
+    if(values.size()==0){
+        throw -1;
+    }
+    values[4]=cv;
+    QList<double> msgValues;
+    msgValues.append(3);
+    msgValues.append(cv);
+    qDebug() << "Set SP " << cv;
+    sendMessage(msgValues,SET);
+}
+
+void Motor::setPid(bool active)
+{
+    double on=0;
+    if(active){
+        on=1;
+    }
+    if(values.size()==0){
+        throw -1;
+    }
+    values[8]=active;
+    QList<double> msgValues;
+    msgValues.append(7);
+    msgValues.append(active);
+    //qDebug() << "Set SP " << on;
+    sendMessage(msgValues,SET);
+}
+
 void Motor::setKp(double kp)
 {
 

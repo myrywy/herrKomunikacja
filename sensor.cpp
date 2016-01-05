@@ -1,4 +1,5 @@
 #include "sensor.h"
+#include "peryferium.h"
 #include <QDebug>
 
 Sensor::Sensor(QString _name)
@@ -42,9 +43,6 @@ QList<double> Sensor::read(){
 }
 
 
-void Sensor::setCallback(std::function< void(Sensor *)> f){
-   callbackFunction=std::function< void(Sensor *)>(f);
-}
 
 void Sensor::setValues(QList<double> _values)
 {

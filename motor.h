@@ -10,6 +10,8 @@ class Motor : public Actuator
 public:
     Motor(QString _name);
     void setSP(double rpm);
+    void setCV(double cv);
+    void setPid(bool active=true);
     void setKp(double kp);
     void setTi(double ti);
     void setTd(double td);

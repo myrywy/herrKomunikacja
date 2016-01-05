@@ -15,7 +15,7 @@ Velocity::Velocity(double _linear, double _angular)
 
 double Velocity::getLeftSp()
 {
-    qDebug() << linear << "," << angular << " - leftSP = " << maxSP*linear*(1-angular);
+    //qDebug() << linear << "," << angular << " - leftSP = " << maxSP*linear*(1-angular);
     return maxSP*linear*(1-angular);
 }
 
@@ -24,4 +24,16 @@ double Velocity::getRightSp()
     return maxSP*linear*(1+angular);
 }
 
-double Velocity::maxSP=2.5;
+double Velocity::getLeftCv()
+{
+    return 5000-maxCV*linear*(1-0.5*angular);
+}
+
+double Velocity::getRightCv()
+{
+    return 5000-maxCV*linear*(1+0.5*angular);
+}
+
+double Velocity::maxSP=1;
+double Velocity::maxCV=2500;
+bool Velocity::openSystem=false;

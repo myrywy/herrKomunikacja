@@ -10,7 +10,7 @@
 #include <QSharedPointer>
 #include <QtSql>
 #include <QtSql/QSqlDatabase>
-#include "parser.h"
+//#include "parser.h"
 #include "sensor.h"
 #include "actuator.h"
 #include "sonar.h"
@@ -64,6 +64,7 @@ protected:
     State state;
     Velocity velocity;
     //Sensor* sonar;
+    Peryferium* system;
     Sonar* sonar;
     Sharp* sharp;
     Floor* rearFloor;
@@ -75,10 +76,11 @@ protected:
     ComPort* port;
     QTcpServer* tcpServer;
     QList< QSharedPointer<QTcpSocket> > sockets;
-    bool checkObstacle(Direction dir, double max=20,double min=0);
-
+    bool checkObstacle(Direction dir, double max=10,double min=0);
+    void setupMotors();
     void checkState();
     void setVelocity(Velocity v);
+    void systemReset();
 
 protected slots:
     void timerHandler();

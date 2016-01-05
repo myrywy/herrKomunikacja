@@ -14,6 +14,7 @@ public:
     //ComPort();
     ComPort(QString _portName);
     virtual qint64 writeData(const char * data, qint64 maxSize);
+    void resetQueue();
 protected:
     int maxWaitTime;
     QQueue<QByteArray> queue;
