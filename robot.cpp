@@ -311,19 +311,21 @@ void Robot::checkState()
             setState(NA_WPROST);
         }
     }else if(state==W_LEWO){
-        if((!checkObstacle(FRONT))){// && (!checkObstacle(RIGHT))){
+        if((!checkObstacle(FRONT)) && (!checkObstacle(FRONT_RIGHT))){// && (!checkObstacle(RIGHT))){
             setState(NA_WPROST);
         }else if(checkObstacle(FRONT) && checkObstacle(LEFT) && checkObstacle(RIGHT)){
             setState(STOP);
         }
     }else if(state==W_PRAWO){
-        if((!checkObstacle(FRONT)) && (!checkObstacle(LEFT))){
+        if((!checkObstacle(FRONT)) && (!checkObstacle(FRONT_LEFT))){
             setState(NA_WPROST);
         }else if(checkObstacle(EXT_FRONT) && checkObstacle(LEFT) && checkObstacle(RIGHT)){
             setState(STOP);
         }
     }else if(state==STOP){
-        qDebug() << "stop";//stój na wieki
+        if(!checkObstacle(EXT_FRONT)){
+            setState(NA_WPROST);
+        }
     }
 }
 
