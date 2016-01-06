@@ -53,7 +53,7 @@ void Sensor::setValues(QList<double> _values)
     if(callbackFunction){
         callbackFunction(this);
     }
-    //updateDB();
+    updateDB();
 }
 
 QList<double> Sensor::getValues() const

@@ -78,7 +78,7 @@ void ComPort::waitingTimeout()
 {
     qInfo() << "Timeout!";
     qInfo() << QTime::currentTime().toString("hh:mm:ss,zzz");
-    qWarning() << "Timeout!";
-    qWarning() << QTime::currentTime().toString("hh:mm:ss,zzz");
+    //qWarning() << "Timeout!";
+    //qWarning() << QTime::currentTime().toString("hh:mm:ss,zzz");
 
 }

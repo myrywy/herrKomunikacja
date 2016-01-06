@@ -31,7 +31,9 @@ SOURCES += main.cpp \
     comport.cpp \
     velocity.cpp \
     motor.cpp \
-    debuginfo.cpp
+    debuginfo.cpp \
+    tcpserver.cpp \
+    retransmiter.cpp
 
 HEADERS += \
     robot.h \
@@ -48,4 +50,6 @@ HEADERS += \
     comport.h \
     velocity.h \
     motor.h \
-    debuginfo.h
+    debuginfo.h \
+    tcpserver.h \
+    retransmiter.h
