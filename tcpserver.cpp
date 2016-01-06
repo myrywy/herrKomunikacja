@@ -6,11 +6,14 @@
 TcpServer::TcpServer(QObject *parent) : QTcpServer(parent)
 {
     //tcpServer = new QTcpServer(this);
-    commands=QVector<QString>(7);
+    commands=QVector<QString>(10);
     commands[NA_WPROST]="forward";
     commands[W_LEWO]="left";
     commands[W_PRAWO]="right";
     commands[STOP]="stop";
+    commands[ROZRUCH]="start";
+    commands[TYL]="back";
+    commands[AUTO_ON]="auto";
     connect(this,SIGNAL(newConnection()),this,SLOT(newConnectionHandler()));
 }
 

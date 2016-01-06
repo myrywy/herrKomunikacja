@@ -42,7 +42,9 @@ enum State{
     W_LEWO,
     W_PRAWO,
     STOP,
-    ROZRUCH
+    ROZRUCH,
+    TYL,
+    AUTO_ON
 };
 
 enum Control{

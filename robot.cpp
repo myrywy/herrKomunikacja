@@ -129,8 +129,8 @@ Robot::Robot()
     connect(timer,SIGNAL(timeout()),SLOT(timerHandler()));
 
     velocity=Velocity(0,0);
+    control=HAND;
     setState(ROZRUCH);
-    control=AUTO;
 }
 
 Robot::~Robot()
@@ -236,8 +236,17 @@ void Robot::setState(const State &value)
 {
     qDebug() << "Set state";
     qWarning() << "STAN: " << state;
+    if(value==AUTO_ON){
+        control=AUTO;
+        setState(ROZRUCH);
+        checkState();
+    }
     if(state==value){
         return;
+    }
+    bool toggleDir=false;
+    if(value==TYL || state==TYL){
+        toggleDir=true;
     }
     state = value;
     qWarning() << "ZMIANA STANU " << state;
@@ -252,6 +261,13 @@ void Robot::setState(const State &value)
     }
     if(value==STOP){
         velocity=Velocity(0.0,0.0);
+    }
+    if(value==TYL){
+        velocity=Velocity(-0.7,0.0);
+    }
+    if(toggleDir){
+        motorLeft->toggleDir();
+        motorRight->toggleDir();
     }
     motorLeft->setSP(velocity.getLeftSp());
     motorRight->setSP(velocity.getRightSp());

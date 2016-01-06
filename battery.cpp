@@ -9,9 +9,8 @@ Battery::Battery(QString _name)
 
 void Battery::updateDB()
 {
-    qWarning()<<"updatedb";
     if(values.size()<1){
-        qWarning() << "Brak danych (Battery).";
+        qDebug() << "Brak danych (Battery).";
         return;
     }
     QString statement="UPDATE `herring`.`batery` SET `voltage`='";

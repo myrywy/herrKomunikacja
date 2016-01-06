@@ -100,5 +100,18 @@ void Motor::setDir(double dir)
     sendMessage(msgValues,SET);
 }
 
+void Motor::toggleDir()
+{
+    if(values.size()==0){
+        throw -1;
+    }
+    double dir=values[1];
+    if(dir==1){
+        setDir(0);
+    }else{
+        setDir(1);
+    }
+}
+
 
 

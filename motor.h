@@ -16,6 +16,7 @@ public:
     void setTi(double ti);
     void setTd(double td);
     void setDir(double dir);
+    void toggleDir();
 };
 
 #endif // MOTOR_H

@@ -16,12 +16,12 @@ Velocity::Velocity(double _linear, double _angular)
 double Velocity::getLeftSp()
 {
     //qDebug() << linear << "," << angular << " - leftSP = " << maxSP*linear*(1-angular);
-    return maxSP*linear*(1-angular);
+    return qAbs(maxSP*linear)*(1-angular);
 }
 
 double Velocity::getRightSp()
 {
-    return maxSP*linear*(1+angular);
+    return qAbs(maxSP*linear)*(1+angular);
 }
 
 double Velocity::getLeftCv()
