@@ -6,8 +6,8 @@ Robot::Robot()
     :port(0),
       position(8)
 {
-    qWarning()<<QTime::currentTime().toString();
-    qWarning()<<"HerringSystem(TM) uruchomiony. Witamy w nowym lepszym świcie, gdzie niezawodne i inteligentne roboty dbają o twoje bezpieczeństwo.";
+    qInfo()<<QTime::currentTime().toString();
+    qInfo()<<"HerringSystem(TM) uruchomiony. Witamy w nowym lepszym świcie, gdzie niezawodne i inteligentne roboty dbają o twoje bezpieczeństwo.";
     /*
      *
      * Baza danych
