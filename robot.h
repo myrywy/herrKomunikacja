@@ -88,7 +88,7 @@ protected:
     QTimer* timer;
     ComPort* port;
     TcpServer* server;
-    bool checkObstacle(Direction dir, double max=10,double min=0);
+    bool checkObstacle(Direction dir, double max=15,double min=0);
     void setupMotors();
     void checkState();
     void setVelocity(Velocity v);
