@@ -1,6 +1,8 @@
 #include "robot.h"
 #include "tcpserver.h"
 #include <QTime>
+#include "navigator.h"
+#include "avoidcollisionalgorithm.h"
 
 Robot::Robot()
     :port(0),
@@ -230,12 +232,12 @@ void Robot::checkVoltage(Sensor *s)
     }
 }
 
-State Robot::getState() const
+MotorsState Robot::getState() const
 {
     return state;
 }
 
-void Robot::setState(const State &value)
+void Robot::setState(const MotorsState &value)
 {
     qDebug() << "Set state";
     qWarning() << "STAN: " << state;
@@ -276,6 +278,59 @@ void Robot::setState(const State &value)
     motorRight->setSP(velocity.getRightSp());
     //motorLeft->setCV(velocity.getLeftSp());
     //motorRight->setCV(velocity.getRightSp());
+}
+
+void Robot::setupNavigator()
+{
+    navigator=new AvoidCollisionAlgorithm(this);
+
+    for(int i=0;i<int(DirectionsNumber);i++){
+        auto checkFree=[&](){
+            return !checkObstacle(Direction(i));
+        };
+        auto checkBlocked=[&](){
+            return checkObstacle(Direction(i));
+        };
+
+        navigator->blocked[i]->setCheckFunction(checkBlocked);
+        navigator->free[i]->setCheckFunction(checkFree);
+    }
+    auto checkFrontFloor=[&](){
+        QList<double> v=frontFloor->getValues();
+        if(!v.isEmpty()){
+            return v[0]>0;
+        }
+        return false;
+    };
+    auto checkNoFrontFloor=[&](){
+        QList<double> v=frontFloor->getValues();
+        if(!v.isEmpty()){
+            return !v[0]>0;
+        }
+        return !false;
+    };
+
+    auto checkRearFloor=[&](){
+        QList<double> v=rearFloor->getValues();
+        if(!v.isEmpty()){
+            return v[0]>0;
+        }
+        return false;
+    };
+    auto checkNoRearFloor=[&](){
+        QList<double> v=rearFloor->getValues();
+        if(!v.isEmpty()){
+            return !v[0]>0;
+        }
+        return !false;
+    };
+    navigator->noFloor[FRONT_FLOOR]->setCheckFunction(checkFrontFloor);
+    navigator->floor[FRONT_FLOOR]->setCheckFunction(checkNoFrontFloor);
+    navigator->noFloor[BACK_FLOOR]->setCheckFunction(checkRearFloor);
+    navigator->floor[BACK_FLOOR]->setCheckFunction(checkNoRearFloor);
+
+    connect(navigator,SIGNAL(stateChanged(MotorsState)),this,SLOT(setState(MotorsState)));
+    connect(theParser,SIGNAL(commandReceived()),navigator,SLOT(newConditions()));
 }
 
 Control Robot::getControl() const

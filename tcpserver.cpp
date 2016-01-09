@@ -63,7 +63,7 @@ void TcpServer::tcpReadyReadHandler(QTcpSocket* socket)
     }
     qWarning() << "data: " << bytes;
     //port->write(bytes);
-    State st=State(checkCommand(bytes));
+    MotorsState st=MotorsState(checkCommand(bytes));
     if(st!=-1){
         socket->readAll();
         robot->setControl(HAND);

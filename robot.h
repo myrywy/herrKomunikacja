@@ -22,30 +22,7 @@
 #include <QQueue>
 #include <QVector>
 
-enum Direction{
-   FRONT=0,
-    FRONT_LEFT,
-    FRONT_RIGHT,
-    LEFT,
-    RIGHT,
-    REAR,
-    REAR_LEFT,
-    REAR_RIGHT,
-    EXT_FRONT,
-    EXT_BACK
-};
-
-enum State{
-    COFANIE,
-    ZAWRACANIE,
-    NA_WPROST,
-    W_LEWO,
-    W_PRAWO,
-    STOP,
-    ROZRUCH,
-    TYL,
-    AUTO_ON
-};
+#include "enums.h"
 
 enum Control{
     AUTO,
@@ -53,6 +30,8 @@ enum Control{
 };
 
 class TcpServer;
+
+class Navigator;
 
 class Robot : public QObject
 {
@@ -64,16 +43,17 @@ public:
     void updatePosition(Sensor* s);
     void checkFloor(Sensor* s);
     void checkVoltage(Sensor* s);
-    State getState() const;
+    MotorsState getState() const;
 
     Control getControl() const;
     void setControl(const Control &value);
-    void setState(const State &value);
 
 protected:
+    Navigator* navigator;
+    void setupNavigator();
     QVector<double> position;
     QQueue<double> voltage;
-    State state;
+    MotorsState state;
     Control control;
     Velocity velocity;
     //Sensor* sonar;
@@ -96,6 +76,9 @@ protected:
 
 protected slots:
     void timerHandler();
+public slots:
+    void setState(const MotorsState &value);
+
 };
 
 

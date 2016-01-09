@@ -33,7 +33,12 @@ SOURCES += main.cpp \
     motor.cpp \
     debuginfo.cpp \
     tcpserver.cpp \
-    retransmiter.cpp
+    retransmiter.cpp \
+    navigator.cpp \
+    state.cpp \
+    transition.cpp \
+    condition.cpp \
+    avoidcollisionalgorithm.cpp
 
 HEADERS += \
     robot.h \
@@ -51,5 +56,13 @@ HEADERS += \
     velocity.h \
     motor.h \
     debuginfo.h \
+    retransmiter.h \
+    navigator.h \
+    state.h \
+    transition.h \
+    condition.h \
     tcpserver.h \
-    retransmiter.h
+    motorstate.h \
+    avoidcollisionalgorithm.h \
+    direction.h \
+    enums.h
