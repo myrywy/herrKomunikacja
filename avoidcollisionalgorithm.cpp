@@ -2,11 +2,11 @@
 
 AvoidCollisionAlgorithm::AvoidCollisionAlgorithm(QObject *parent) : Navigator(parent)
 {
-    cofanie=new State(this);
-    naWprost=new State(this);
-    wLewo=new State(this);
-    wPrawo=new State(this);
-    stop=new State(this);
+    cofanie=new State("cofanie",this);
+    naWprost=new State("naWprost",this);
+    wLewo=new State("wLewo",this);
+    wPrawo=new State("wPrawo",this);
+    stop=new State("stop",this);
 
     cofanie->setMotorsState(TYL);
     naWprost->setMotorsState(NA_WPROST);
@@ -32,9 +32,9 @@ AvoidCollisionAlgorithm::AvoidCollisionAlgorithm(QObject *parent) : Navigator(pa
     wLewo->addTransition(Transition(stop)<<blocked[FRONT]<<blocked[REAR]<<blocked[LEFT]<<blocked[RIGHT]);
 
     stop->addTransition(Transition(naWprost)<<free[FRONT]);
-    stop->addTransition(Transition(wPrawo)<<free[RIGHT]);
-    stop->addTransition(Transition(wLewo)<<free[LEFT]);
-    stop->addTransition(Transition(cofanie)<<free[EXT_BACK]);
+    stop->addTransition(Transition(wPrawo)<<free[RIGHT]<<blocked[FRONT]);
+    stop->addTransition(Transition(wLewo)<<free[LEFT]<<blocked[FRONT]);
+    stop->addTransition(Transition(cofanie)<<free[EXT_BACK]<<blocked[FRONT]);
 
     currentState=stop;
 }

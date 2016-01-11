@@ -167,7 +167,7 @@ void Parser::process()
                 qDebug() << msg;
                 qInfo() << "->" << msg;
                 qInfo() << QTime::currentTime().toString("hh:mm:ss,zzz");
-                //emit commandReceived();
+                emit commandReceived();
                 (static_cast<ComPort*>(port))->goOn();
                 parse(QString(msg));
             }

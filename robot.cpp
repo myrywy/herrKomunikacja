@@ -56,13 +56,13 @@ Robot::Robot()
         return;
     }
     //port=new QSerialPort(ports[0].portName());
-    port=new ComPort("COM3");
+    port=new ComPort("COM4");
     port->setBaudRate(QSerialPort::Baud9600);
     if(port->open(QIODevice::ReadWrite)){
         qDebug()<< "Port otwarty";
         new Parser(port);
         Parser::parser->setParent(this);
-        connect(theParser,SIGNAL(commandReceived()),port,SLOT(goOn()));
+        //connect(theParser,SIGNAL(commandReceived()),port,SLOT(goOn()));
     }else{
         qDebug()<< "Nie udało się otworzyć portu";
     }
@@ -136,6 +136,7 @@ Robot::Robot()
     velocity=Velocity(0,0);
     control=HAND;
     setState(ROZRUCH);
+    setupNavigator();
 }
 
 Robot::~Robot()
@@ -285,10 +286,12 @@ void Robot::setupNavigator()
     navigator=new AvoidCollisionAlgorithm(this);
 
     for(int i=0;i<int(DirectionsNumber);i++){
-        auto checkFree=[&](){
+        auto checkFree=[i,this](){
+            qWarning()<<"!checkObst("<< i << ")="<<!checkObstacle(Direction(i));
             return !checkObstacle(Direction(i));
         };
-        auto checkBlocked=[&](){
+        auto checkBlocked=[i,this](){
+            qWarning()<<"checkObst("<< i << ")="<<checkObstacle(Direction(i));
             return checkObstacle(Direction(i));
         };
 
@@ -455,7 +458,7 @@ void Robot::timerHandler()
     }*/
     //qDebug() << "still alive";
     //QProcess::execute("clear");
-    //system("cls");
+    ::system("cls");
     qDebug() << "F " << position[FRONT]
                         << "FL " << position[FRONT_LEFT]
                         << "LEWO " << position[LEFT]
@@ -469,7 +472,7 @@ void Robot::timerHandler()
     for(int i=0;i<obstacles.size();i++){
         obstacles[i]=checkObstacle(Direction(i));
     }
-    qDebug()<<"FRONT"<<obstacles[FRONT]
+    qWarning()<<"FRONT"<<obstacles[FRONT]
               <<"FRONT_LEFT"<<obstacles[FRONT_LEFT]
                 <<"FRONT_RIGHT"<<obstacles[FRONT_RIGHT]
                   <<"LEFT"<<obstacles[LEFT]
@@ -479,7 +482,7 @@ void Robot::timerHandler()
                           <<"REAR_RIGHT"<<obstacles[REAR_RIGHT]
                             <<"EXT_FRONT"<<obstacles[EXT_FRONT]
                               <<"EXT_BACK"<<obstacles[EXT_BACK];
-    qDebug()<<"stan: "<< state;
+    qWarning()<<"stan: "<< state;
     qDebug()<<"rand"<<qrand();
 }
 

@@ -7,6 +7,12 @@ State::State(QObject *parent) : QObject(parent)
     qsrand(QTime::currentTime().msec());
 }
 
+State::State(QString _name, QObject *parent) : QObject(parent),
+    name(_name)
+{
+    qsrand(QTime::currentTime().msec());
+}
+
 void State::addTransition(Transition t)
 {
     transitions.append(t);
@@ -17,7 +23,7 @@ State* State::newState()
 {
     QList<State*> avilable;
     for(Transition& transition : transitions){
-        State* tmp=transition.nextState;
+        State* tmp=transition.checkTransition();
         if(tmp){
             avilable.append(tmp);
         }
