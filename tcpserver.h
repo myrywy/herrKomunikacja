@@ -17,7 +17,9 @@ public:
 protected:
     QList< QSharedPointer<QTcpSocket> > sockets;
     int checkCommand(QString msg);
+    int checkCameraCommand(QString msg);
     QVector<QString> commands;
+    QVector<QString> cameraCommands;
     Robot* robot;
 signals:
 

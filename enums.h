@@ -9,5 +9,14 @@ enum{
     FRONT_FLOOR
 };
 
+enum class CameraMove{
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
+    STOP,
+    CameraMoveNumber
+};
+
 #endif // ENUMS_H
 

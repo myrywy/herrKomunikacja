@@ -18,6 +18,7 @@
 #include "floor.h"
 #include "battery.h"
 #include "motor.h"
+#include "camera.h"
 #include "velocity.h"
 #include <QQueue>
 #include <QVector>
@@ -47,7 +48,7 @@ public:
 
     Control getControl() const;
     void setControl(const Control &value);
-
+    Camera* camera;
 protected:
     Navigator* navigator;
     void setupNavigator();

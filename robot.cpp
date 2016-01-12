@@ -114,15 +114,16 @@ Robot::Robot()
     frontFloor->setCallbackFunction(delegateCheckFloor);
     rearFloor->setCallbackFunction(delegateCheckFloor);
     battery->setCallbackFunction(delegateCheckVoltage);
-    sonar->autoMeasure(1000);
-    sharp->autoMeasure(1000);
-    frontFloor->autoMeasure(1000);
-    rearFloor->autoMeasure(1000);
-    battery->autoMeasure(1000);
+    //sonar->autoMeasure(1000);
+    //sharp->autoMeasure(1000);
+    //frontFloor->autoMeasure(1000);
+    //rearFloor->autoMeasure(1000);
+    //battery->autoMeasure(1000);
     qDebug() << "Sensory OK.";
     motorLeft = new Motor("motor left");
     motorRight = new Motor("motor right");
     setupMotors();
+    camera=new Camera(this);
     /*
      * misc, testowe
      */

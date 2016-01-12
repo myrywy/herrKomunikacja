@@ -38,7 +38,9 @@ SOURCES += main.cpp \
     state.cpp \
     transition.cpp \
     condition.cpp \
-    avoidcollisionalgorithm.cpp
+    avoidcollisionalgorithm.cpp \
+    camera.cpp \
+    servo.cpp
 
 HEADERS += \
     robot.h \
@@ -65,4 +67,6 @@ HEADERS += \
     motorstate.h \
     avoidcollisionalgorithm.h \
     direction.h \
-    enums.h
+    enums.h \
+    camera.h \
+    servo.h
