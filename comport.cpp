@@ -26,7 +26,12 @@ ComPort::ComPort(QString _portName)
 
 qint64 ComPort::writeData(const char * data, qint64 maxSize)
 {
+    /*if(queue.size()>20){
+        resetQueue();
+    }*/
     const QByteArray dataArray(data);
+    qWarning() << "enqueued: " << queue.size();
+    qInfo() << "enqueued: " << queue.size();
     if(waiting){
         qInfo() << "enqueue: " << data;
         queue.enqueue(dataArray);

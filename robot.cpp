@@ -114,11 +114,11 @@ Robot::Robot()
     frontFloor->setCallbackFunction(delegateCheckFloor);
     rearFloor->setCallbackFunction(delegateCheckFloor);
     battery->setCallbackFunction(delegateCheckVoltage);
-    //sonar->autoMeasure(1000);
-    //sharp->autoMeasure(1000);
-    //frontFloor->autoMeasure(1000);
-    //rearFloor->autoMeasure(1000);
-    //battery->autoMeasure(1000);
+    //sonar->autoMeasure(500);
+    sharp->autoMeasure(1000);
+    //frontFloor->autoMeasure(500);
+    //rearFloor->autoMeasure(500);
+    //battery->autoMeasure(500);
     qDebug() << "Sensory OK.";
     motorLeft = new Motor("motor left");
     motorRight = new Motor("motor right");
@@ -272,12 +272,16 @@ void Robot::setState(const MotorsState &value)
     if(value==TYL){
         velocity=Velocity(-0.7,0.0);
     }
-    if(toggleDir){
+    if(toggleDir && value!=STOP){
         motorLeft->toggleDir();
         motorRight->toggleDir();
     }
     motorLeft->setSP(velocity.getLeftSp());
     motorRight->setSP(velocity.getRightSp());
+    if(toggleDir && value==STOP){
+        motorLeft->toggleDir();
+        motorRight->toggleDir();
+    }
     //motorLeft->setCV(velocity.getLeftSp());
     //motorRight->setCV(velocity.getRightSp());
 }
@@ -288,11 +292,11 @@ void Robot::setupNavigator()
 
     for(int i=0;i<int(DirectionsNumber);i++){
         auto checkFree=[i,this](){
-            qWarning()<<"!checkObst("<< i << ")="<<!checkObstacle(Direction(i));
+            //qWarning()<<"!checkObst("<< i << ")="<<!checkObstacle(Direction(i));
             return !checkObstacle(Direction(i));
         };
         auto checkBlocked=[i,this](){
-            qWarning()<<"checkObst("<< i << ")="<<checkObstacle(Direction(i));
+            //qWarning()<<"checkObst("<< i << ")="<<checkObstacle(Direction(i));
             return checkObstacle(Direction(i));
         };
 
