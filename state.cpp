@@ -1,4 +1,5 @@
 #include "state.h"
+#include "debuginfo.h"
 #include <QtGlobal>
 #include <QTime>
 
@@ -47,4 +48,9 @@ MotorsState State::getMotorsState() const
 void State::setMotorsState(const MotorsState &value)
 {
     motorsState = value;
+}
+
+QString State::getName() const
+{
+    return name;
 }

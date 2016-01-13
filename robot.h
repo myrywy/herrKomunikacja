@@ -74,6 +74,7 @@ protected:
     void checkState();
     void setVelocity(Velocity v);
     void systemReset();
+    QTimer* stateUpdateTimer;
 
 protected slots:
     void timerHandler();

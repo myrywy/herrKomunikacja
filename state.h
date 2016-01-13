@@ -17,6 +17,8 @@ public:
     MotorsState getMotorsState() const;
     void setMotorsState(const MotorsState &value);
 
+    QString getName() const;
+
 protected:
     QString name;
     QList<Transition> transitions;

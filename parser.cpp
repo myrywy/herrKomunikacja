@@ -50,9 +50,9 @@ void Parser::parse(QString message)
             QList<double> values=stringToDoubleList(words[2]);
             s->setValues( values );
         }
-        if(s->callbackFunction){
+        /*if(s->callbackFunction){
             //s->callbackFunction(s);
-        }
+        }*/
     }
     Actuator* a=dynamic_cast<Actuator*>(p);
     if(!s && !a){

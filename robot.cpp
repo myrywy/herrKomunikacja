@@ -57,7 +57,7 @@ Robot::Robot()
     }
     //port=new QSerialPort(ports[0].portName());
     port=new ComPort("COM4");
-    port->setBaudRate(QSerialPort::Baud9600);
+    port->setBaudRate(QSerialPort::Baud57600);
     if(port->open(QIODevice::ReadWrite)){
         qDebug()<< "Port otwarty";
         new Parser(port);
@@ -114,11 +114,11 @@ Robot::Robot()
     frontFloor->setCallbackFunction(delegateCheckFloor);
     rearFloor->setCallbackFunction(delegateCheckFloor);
     battery->setCallbackFunction(delegateCheckVoltage);
-    //sonar->autoMeasure(500);
+    sonar->autoMeasure(1000);
     sharp->autoMeasure(1000);
-    //frontFloor->autoMeasure(500);
-    //rearFloor->autoMeasure(500);
-    //battery->autoMeasure(500);
+    //frontFloor->autoMeasure(1500);
+    //rearFloor->autoMeasure(1500);
+    battery->autoMeasure(1000);
     qDebug() << "Sensory OK.";
     motorLeft = new Motor("motor left");
     motorRight = new Motor("motor right");
@@ -138,6 +138,7 @@ Robot::Robot()
     control=HAND;
     setState(ROZRUCH);
     setupNavigator();
+
 }
 
 Robot::~Robot()
@@ -182,7 +183,7 @@ void Robot::updatePosition(Sensor *s)
             p=0;
         }
     }
-    checkState();
+    //checkState();
 }
 
 void Robot::checkFloor(Sensor *s)
@@ -243,13 +244,17 @@ void Robot::setState(const MotorsState &value)
 {
     qDebug() << "Set state";
     qWarning() << "STAN: " << state;
+    if(value==ROZRUCH){
+        setState(NA_WPROST);
+        return;
+    }
     if(value==AUTO_ON){
         control=AUTO;
         setState(ROZRUCH);
         checkState();
     }
     if(state==value){
-        return;
+        //return;
     }
     bool toggleDir=false;
     if(value==TYL || state==TYL){
@@ -272,15 +277,23 @@ void Robot::setState(const MotorsState &value)
     if(value==TYL){
         velocity=Velocity(-0.7,0.0);
     }
-    if(toggleDir && value!=STOP){
+    /*if(toggleDir && value!=STOP){
         motorLeft->toggleDir();
         motorRight->toggleDir();
+    }*/
+    if(value==TYL){
+        motorLeft->setDir(0);
+        motorRight->setDir(0);
     }
     motorLeft->setSP(velocity.getLeftSp());
     motorRight->setSP(velocity.getRightSp());
-    if(toggleDir && value==STOP){
+    /*if(toggleDir && value==STOP){
         motorLeft->toggleDir();
         motorRight->toggleDir();
+    }*/
+    if(value!=TYL){
+        motorLeft->setDir(1);
+        motorRight->setDir(1);
     }
     //motorLeft->setCV(velocity.getLeftSp());
     //motorRight->setCV(velocity.getRightSp());
@@ -337,8 +350,12 @@ void Robot::setupNavigator()
     navigator->noFloor[BACK_FLOOR]->setCheckFunction(checkRearFloor);
     navigator->floor[BACK_FLOOR]->setCheckFunction(checkNoRearFloor);
 
+    stateUpdateTimer=new QTimer();
+    stateUpdateTimer->setInterval(1000);
+    stateUpdateTimer->start();
     connect(navigator,SIGNAL(stateChanged(MotorsState)),this,SLOT(setState(MotorsState)));
-    connect(theParser,SIGNAL(commandReceived()),navigator,SLOT(newConditions()));
+    //connect(theParser,SIGNAL(commandReceived()),navigator,SLOT(newConditions()));
+    connect(stateUpdateTimer,SIGNAL(timeout()),navigator,SLOT(newConditions()));
 }
 
 Control Robot::getControl() const
@@ -439,8 +456,8 @@ void Robot::checkState()
 void Robot::systemReset()
 {
     port->resetQueue();
-    setupMotors();
-    setState(ROZRUCH);
+    //setupMotors();
+    //setState(ROZRUCH);
 }
 
 void Robot::timerHandler()

@@ -14,8 +14,8 @@ AvoidCollisionAlgorithm::AvoidCollisionAlgorithm(QObject *parent) : Navigator(pa
     wPrawo->setMotorsState(W_PRAWO);
     stop->setMotorsState(STOP);
 
-    cofanie->addTransition(Transition(wPrawo)<<free[RIGHT]<<free[FRONT_LEFT]);
-    cofanie->addTransition(Transition(wLewo)<<free[LEFT]<<free[FRONT_RIGHT]);
+    cofanie->addTransition(Transition(wPrawo)<<free[RIGHT]<<free[FRONT_RIGHT]);
+    cofanie->addTransition(Transition(wLewo)<<free[LEFT]<<free[FRONT_LEFT]);
     cofanie->addTransition(Transition(stop)<<free[EXT_BACK]);
 
     naWprost->addTransition(Transition(wLewo)<<blocked[FRONT]<<blocked[RIGHT]);
@@ -28,7 +28,7 @@ AvoidCollisionAlgorithm::AvoidCollisionAlgorithm(QObject *parent) : Navigator(pa
     wPrawo->addTransition(Transition(stop)<<blocked[FRONT]<<blocked[REAR]<<blocked[LEFT]<<blocked[RIGHT]);
 
     wLewo->addTransition(Transition(naWprost)<<free[FRONT]);
-    wLewo->addTransition(Transition(cofanie)<<blocked[EXT_FRONT]<<blocked[RIGHT]<<blocked[RIGHT]);
+    wLewo->addTransition(Transition(cofanie)<<blocked[EXT_FRONT]<<blocked[LEFT]<<blocked[RIGHT]);
     wLewo->addTransition(Transition(stop)<<blocked[FRONT]<<blocked[REAR]<<blocked[LEFT]<<blocked[RIGHT]);
 
     stop->addTransition(Transition(naWprost)<<free[FRONT]);

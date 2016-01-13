@@ -1,4 +1,5 @@
 #include "navigator.h"
+#include "debuginfo.h"
 
 Navigator::Navigator(QObject *parent) : QObject(parent)
 {
@@ -24,7 +25,8 @@ State* Navigator::getCurrentState() const
 
 void Navigator::setCurrentState(State *value)
 {
-    if(value!=currentState){
+    if(true || value!=currentState){
+        stateInfo(value->getName());
         currentState = value;
         emit stateChanged(currentState);
         emit stateChanged(currentState->getMotorsState());

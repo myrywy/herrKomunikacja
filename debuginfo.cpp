@@ -4,8 +4,10 @@
 DebugInfo* DebugInfo::di=0;
 
 DebugInfo::DebugInfo()
+    :stateFile("state.txt")
 {
     file=fopen("log.txt","a");
+
 }
 
 DebugInfo *DebugInfo::init()
@@ -25,6 +27,13 @@ DebugInfo *DebugInfo::getDi()
 FILE *DebugInfo::getFile()
 {
     return file;
+}
+
+void DebugInfo::addStateInfo(QString str)
+{
+    stateFile<<(str.toStdString()).c_str();
+    stateFile<<"\n";
+    stateFile.flush();
 }
 
 
@@ -53,4 +62,9 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 DebugInfo &debugInfo()
 {
     return *DebugInfo::init();
+}
+
+void stateInfo(QString str)
+{
+    debugInfo().addStateInfo(str);
 }
