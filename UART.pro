@@ -5,8 +5,6 @@ QT += network
 QT += sql
 
 QTPLUGIN += QSQLMYSQL
-QTPLUGIN += QMYSQL
-QTPLUGIN += MYSQL
 
 CONFIG += c++11
 
@@ -15,6 +13,12 @@ CONFIG += console
 CONFIG -= app_bundle
 
 TEMPLATE = app
+
+
+INCLUDEPATH += C:\opencv_mingw\install\include
+LIBS += -L"C:\opencv_mingw\bin"
+LIBS += -lopencv_core2411 -lopencv_highgui2411 -lopencv_imgproc2411
+#LIBS += -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_features2d -lopencv_photo -lopencv_ml -lopencv_objdetect
 
 SOURCES += main.cpp \
     robot.cpp \
@@ -40,7 +44,11 @@ SOURCES += main.cpp \
     condition.cpp \
     avoidcollisionalgorithm.cpp \
     camera.cpp \
-    servo.cpp
+    servo.cpp \
+    imageprocessor.cpp \
+    detectionprocess.cpp \
+    task.cpp \
+    detector.cpp
 
 HEADERS += \
     robot.h \
@@ -69,4 +77,8 @@ HEADERS += \
     direction.h \
     enums.h \
     camera.h \
-    servo.h
+    servo.h \
+    imageprocessor.h \
+    detectionprocess.h \
+    task.h \
+    detector.h
