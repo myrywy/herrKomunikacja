@@ -49,6 +49,8 @@ public:
     Control getControl() const;
     void setControl(const Control &value);
     Camera* camera;
+    static QSqlDatabase *getDb();
+
 protected:
     Navigator* navigator;
     void setupNavigator();

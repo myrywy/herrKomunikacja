@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
     Robot* robot = new Robot();
     robot->setParent(&a);
     ImageProcessor* imgPr=new ImageProcessor(0,10,4,&a);
+    imgPr->setDb(robot->getDb());
     try{
         return a.exec();
     }catch(...){

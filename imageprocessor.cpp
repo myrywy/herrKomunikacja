@@ -4,7 +4,8 @@ ImageProcessor::ImageProcessor(int streamIndex, unsigned interval, int _threadsN
     : QObject(parent),
       stream(streamIndex),
       threadsNumber(_threadsNumber),
-      iter(0)
+      iter(0),
+      db(nullptr)
 {
     tasksInit();
     timer=new QTimer(this);
@@ -27,7 +28,20 @@ void ImageProcessor::tasksInit()
         //connect(detectors[i],SIGNAL(finished()),threads[i],SLOT(quit()));
         //connect(detectors[i],SIGNAL(finished()),threads[i],SLOT(terminate()));
         connect(detectors[i],SIGNAL(imgLoaded()),detectors[i],SLOT(processImage()));
+        if(db){
+            detectors[i]->setDb(db);
+        }
         threads[i]->start();
+    }
+}
+
+void ImageProcessor::setDb(QSqlDatabase *value)
+{
+    db = value;
+    if(db){
+        for(DetectionProcess* &d : detectors){
+            d->setDb(db);
+        }
     }
 }
 

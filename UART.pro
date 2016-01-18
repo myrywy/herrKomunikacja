@@ -1,5 +1,5 @@
 QT += core
-QT -= gui
+#QT -= gui
 QT += serialport
 QT += network
 QT += sql
@@ -48,7 +48,9 @@ SOURCES += main.cpp \
     imageprocessor.cpp \
     detectionprocess.cpp \
     task.cpp \
-    detector.cpp
+    exhaustivesearch.cpp \
+    classifier.cpp \
+    hogpclassifier.cpp
 
 HEADERS += \
     robot.h \
@@ -81,4 +83,7 @@ HEADERS += \
     imageprocessor.h \
     detectionprocess.h \
     task.h \
-    detector.h
+    functionalutils.hpp \
+    exhaustivesearch.hpp \
+    classifier.h \
+    hogpclassifier.h

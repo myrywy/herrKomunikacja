@@ -33,7 +33,7 @@ qint64 ComPort::writeData(const char * data, qint64 maxSize)
     if(queue.size()>20){
         resetQueue();
     }
-    qWarning() << "enqueued: " << queue.size();
+    //qWarning() << "enqueued: " << queue.size();
     qInfo() << "enqueued: " << queue.size();
     if(waiting){
         qInfo() << "enqueue: " << data;

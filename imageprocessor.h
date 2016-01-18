@@ -4,6 +4,7 @@
 #include <QTimer>
 #include <QThread>
 #include <QVector>
+#include <QSqlDatabase>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include "detectionprocess.h"
@@ -15,6 +16,8 @@ class ImageProcessor : public QObject
 public:
     explicit ImageProcessor(int streamIndex, unsigned interval=30, int _threadsNumber=4, QObject *parent = 0);
 
+    void setDb(QSqlDatabase *value);
+
 private:
     QTimer* timer;
     cv::VideoCapture stream;
@@ -23,6 +26,7 @@ private:
     const int threadsNumber;
     void tasksInit();
     int iter;
+    QSqlDatabase* db;
 signals:
     void frameCaptured(cv::Mat frame,int i);
 public slots:

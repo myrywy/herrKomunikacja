@@ -137,7 +137,7 @@ Robot::Robot()
     velocity=Velocity(0,0);
     control=HAND;
     setState(ROZRUCH);
-    setupNavigator();
+    //setupNavigator();
 
 }
 
@@ -147,6 +147,11 @@ Robot::~Robot()
     if(port){
         port->close();
     }
+}
+
+QSqlDatabase *Robot::getDb()
+{
+    return db;
 }
 
 void Robot::updatePosition(Sensor *s)
@@ -263,7 +268,7 @@ void Robot::setState(const MotorsState &value)
     state = value;
     qWarning() << "ZMIANA STANU " << state;
     if(value==NA_WPROST){
-        velocity=Velocity(0.7,0);
+        velocity=Velocity(1,0);
     }
     if(value==W_LEWO){
         velocity=Velocity(0.7,0.5);
