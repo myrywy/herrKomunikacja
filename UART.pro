@@ -50,7 +50,8 @@ SOURCES += main.cpp \
     task.cpp \
     exhaustivesearch.cpp \
     classifier.cpp \
-    hogpclassifier.cpp
+    hogpclassifier.cpp \
+    timelimitedstate.cpp
 
 HEADERS += \
     robot.h \
@@ -86,4 +87,5 @@ HEADERS += \
     functionalutils.hpp \
     exhaustivesearch.hpp \
     classifier.h \
-    hogpclassifier.h
+    hogpclassifier.h \
+    timelimitedstate.h

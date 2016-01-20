@@ -34,6 +34,6 @@ double Velocity::getRightCv()
     return 5000-maxCV*linear*(1+0.5*angular);
 }
 
-double Velocity::maxSP=2.6;
+double Velocity::maxSP=1.5;
 double Velocity::maxCV=2500;
 bool Velocity::openSystem=false;

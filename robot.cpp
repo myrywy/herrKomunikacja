@@ -3,7 +3,9 @@
 #include <QTime>
 #include "navigator.h"
 #include "avoidcollisionalgorithm.h"
-
+#ifdef Q_OS_WIN
+#include "windows.h"
+#endif
 Robot::Robot()
     :port(0),
       position(8)
@@ -130,15 +132,17 @@ Robot::Robot()
     //sonar = new Sensor("sonary");
     //position = QVector<double>(8);
     timer=new QTimer(this);
-    timer->setInterval(500);
+    timer->setInterval(333);
     timer->start();
     connect(timer,SIGNAL(timeout()),SLOT(timerHandler()));
 
     velocity=Velocity(0,0);
     control=HAND;
     setState(ROZRUCH);
+    setupMotors();
     //setupNavigator();
 
+    counter=0;
 }
 
 Robot::~Robot()
@@ -268,13 +272,13 @@ void Robot::setState(const MotorsState &value)
     state = value;
     qWarning() << "ZMIANA STANU " << state;
     if(value==NA_WPROST){
-        velocity=Velocity(1,0);
+        velocity=Velocity(0.2,0);
     }
     if(value==W_LEWO){
-        velocity=Velocity(0.7,0.5);
+        velocity=Velocity(0.2,0.5);
     }
     if(value==W_PRAWO){
-        velocity=Velocity(0.7,-0.5);
+        velocity=Velocity(0.2,-0.5);
     }
     if(value==STOP){
         velocity=Velocity(0.0,0.0);
@@ -387,11 +391,11 @@ bool Robot::checkObstacle(Direction dir, double max, double min)
 
 void Robot::setupMotors()
 {
-    motorLeft->setKp(20);
+    //motorLeft->setKp(20);
     //motorLeft->setTi(0.5);
     //motorLeft->setTd(120);
     motorLeft->setDir(1);
-    motorRight->setKp(20);
+    //motorRight->setKp(20);
     //motorRight->setTi(0.5);
     //motorRight->setTd(120);
     motorRight->setDir(1);
@@ -467,6 +471,55 @@ void Robot::systemReset()
 
 void Robot::timerHandler()
 {
+/*
+#ifdef Q_OS_WIN
+    bool sqTest=true;
+    if(sqTest){
+        switch(counter){
+        case 0:
+            setState(NA_WPROST);
+            break;
+        case 5:
+            setState(W_LEWO);
+            break;
+        case 6:
+            setState(NA_WPROST);
+            break;
+        case 11:
+            setState(W_LEWO);
+            break;
+        case 12:
+            setState(NA_WPROST);
+            break;
+        case 17:
+            setState(W_LEWO);
+            break;
+        case 18:
+            setState(NA_WPROST);
+            break;
+        case 23:
+            setState(W_LEWO);
+            break;
+        case 24:
+            setState(STOP);
+            break;
+        default:
+            break;
+        }
+
+        /*
+        Sleep(1500);
+        Sleep(333);
+        Sleep(1500);
+        Sleep(333);
+        Sleep(1500);
+        Sleep(333);
+        Sleep(1500);
+        Sleep(333);
+        setState(STOP);
+    }
+#endif*/
+    counter++;
     /*if(Parser::parser){
         qDebug() << "Buff data";
         qDebug() << QString(Parser::parser->getBuffer());
